@@ -1,0 +1,154 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>Shopping Cart</title>
+    <script type="text/javascript">
+
+   		function AddRow() {
+   			if (localStorage.CurrentID){
+        		var i = parseInt(localStorage.CurrentID);
+    		}
+    		else{
+        		localStorage.setItem('CurrentID', "0");
+        		var i = parseInt(localStorage.CurrentID);
+    		}
+
+    		i++;
+    		localStorage.setItem('CurrentID', i);
+
+    		var product = "product" + i;
+    		localStorage.setItem("product" + i, '');
+
+	    	var qty = "qty" + i;
+    		localStorage.setItem("qty" + i, '');
+
+    		var table = document.getElementById("cart-table");
+			var row = table.insertRow(2);
+			var cell0 = row.insertCell(0);
+			var cell1 = row.insertCell(1);
+			var cell2 = row.insertCell(2);
+
+			alert(localStorage.getItem('CurrentID'));
+			cell0.innerHTML = "<input type='text' id='"+product+"'>";
+			cell1.innerHTML = "<input type='number' id='"+qty+"'>";
+			cell2.innerHTML = "<button onclick='SaveRow(this,"+i+")' type='button'>Save</button><button onclick='DeleteRow(this,"+i+")' type='button'>Delete</button>";
+		}
+
+		function DeleteRow(r,i) {
+			var row = r.parentNode.parentNode.rowIndex;
+    		document.getElementById("cart-table").deleteRow(row);
+    		localStorage.removeItem("product"+i);
+    		localStorage.removeItem("qty"+i);
+
+		}
+
+		function SaveRow(element,r) {
+			var product = document.getElementById('product'+r).value;
+			var qty = document.getElementById('qty'+r).value;
+			localStorage.setItem('qty' + r, qty);
+			localStorage.setItem('product' + r, product);
+
+			alert('success');
+
+		}
+
+		function SearchRecord() {
+			
+		}
+
+		function EditRecord() {
+			
+		}
+
+		function DeleteRecord(i) {
+			localStorage.removeItem("product"+i);
+    		localStorage.removeItem("qty"+i);
+		}
+
+
+		function Truncate() {
+			localStorage.clear();
+			alert('cleared');
+		}
+
+		function FetchData() {
+			alert("Total number of records in localStorage: " + localStorage.length);
+			if (localStorage.CurrentID){
+        		var i = parseInt(localStorage.CurrentID);
+    		}
+    		else{
+        		localStorage.setItem('CurrentID', "0");
+        		var i = parseInt(localStorage.CurrentID);
+    		}
+
+    		var table = document.getElementById("cart-table");
+    		var i = (localStorage.length); //number or records
+    		var conta = (i-1)/2; //number of rows that should be generated
+    		var id = (i-1)/2; //initialized fetching id system
+    		while(conta > 0){ //this will loop x i
+
+				var product = localStorage.getItem('product' + id);
+
+				if(product==""){
+    				alert("skipped");
+        			conta--;
+        		}
+        		else{
+        			conta--;
+        			var table = document.getElementById("cart-table");
+					var row = table.insertRow(2);
+					var cell0 = row.insertCell(0);
+					var cell1 = row.insertCell(1);
+					var cell2 = row.insertCell(2);
+					//alert(localStorage.getItem('CurrentID'));
+					cell0.innerHTML = localStorage.getItem('product' + id);
+					cell1.innerHTML = localStorage.getItem('qty' + id);
+					cell2.innerHTML = "<button onclick='EditRow(this,"+id+")' type='button'>Edit</button><button onclick='DeleteRecord("+id+")' type='button'>Delete</button>";
+        		}
+        		id--;
+    		}
+		}
+
+		function checkStorage() {
+    		if(typeof(Storage) !== "undefined") {
+        			FetchData();
+    		}
+     		else {
+        	alert('Sorry! No Web Storage support...')
+    		}
+		}
+
+		window.onload = function() {
+    		checkStorage();
+		}
+
+	</script>
+</head>
+<body>
+	<button onclick="AddRow()" type="button">Add</button>
+
+	<table border="1" width="550" id="cart-table">
+		<thead align="Center">
+			<tr>
+				<td width="33.33%">Product</td>
+				<td width="33.33%">Qty</td>
+				<td width="33.34%"></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<!--td colspan="3" align="Center">NO RECORDS FOUND</td-->
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="2" align="right">Total Qty:</td>
+				<td align="Center">0</td>
+			</tr>
+		</tfoot>
+	</table>
+
+
+	<button onclick="Truncate()" type="button">Truncate localStorage</button>
+</body>
+</html>
