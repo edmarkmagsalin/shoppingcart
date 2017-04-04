@@ -1,3 +1,30 @@
+cart.html
+DETAILS
+ACTIVITY
+Today
+
+You edited an item
+1:31 am
+HTML
+cart.html
+Yesterday
+
+You edited an item
+Mon. 2:53 pm
+HTML
+cart.html
+
+You edited an item
+Mon. 9:54 am
+HTML
+cart.html
+
+You uploaded an item
+Mon. 8:43 am
+HTML
+cart.html
+No recorded activity before 3 April 2017
+
 <!DOCTYPE>
 <html>
 <head>
@@ -40,15 +67,21 @@
     		localStorage.removeItem("product"+i);
     		localStorage.removeItem("qty"+i);
 
+
 		}
 
-		function SaveRow(element,r) {
-			var product = document.getElementById('product'+r).value;
-			var qty = document.getElementById('qty'+r).value;
-			localStorage.setItem('qty' + r, qty);
-			localStorage.setItem('product' + r, product);
+		function SaveRow(e,id) {
+			var product = document.getElementById('product'+id).value;
+			var qty = document.getElementById('qty'+id).value;
+			localStorage.setItem('qty' + id, qty);
+			localStorage.setItem('product' + id, product);
 
-			alert('success');
+			var row = e.parentNode.parentNode.rowIndex;
+			document.getElementById("cart-table").rows[row].cells[0].innerHTML = localStorage.getItem('product' + id);
+			document.getElementById("cart-table").rows[row].cells[1].innerHTML = localStorage.getItem('qty' + id);
+			document.getElementById("cart-table").rows[row].cells[2].innerHTML = "<button onclick='EditRecord(this,"+id+")' type='button'>Edit</button><button onclick='DeleteRecord(this,"+id+")' type='button'>Delete</button>";
+
+			//alert('success');
 
 		}
 
@@ -56,23 +89,34 @@
 			
 		}
 
-		function EditRecord() {
-			
+		function EditRecord(e,id) {
+			var product = localStorage.getItem('product' + id);
+			var qty = localStorage.getItem('qty' + id);
+			var row = e.parentNode.parentNode.rowIndex;
+			document.getElementById("cart-table").rows[row].cells[0].innerHTML = "<input type='text' id='product"+id+"' value='"+product+"'>";
+			document.getElementById("cart-table").rows[row].cells[1].innerHTML = "<input type='number' id='qty"+id+"' value='"+qty+"'>";
+			document.getElementById("cart-table").rows[row].cells[2].innerHTML = "<button onclick='SaveRow(this,"+id+")' type='button'>Save</button><button onclick='DeleteRow(this,"+id+")' type='button'>Delete</button>";
+			//alert("element:"+row);
+			//alert("ID:"+id);
 		}
 
-		function DeleteRecord(i) {
-			localStorage.removeItem("product"+i);
-    		localStorage.removeItem("qty"+i);
+		function DeleteRecord(r,id) {
+			var row = r.parentNode.parentNode.rowIndex;
+    		document.getElementById("cart-table").deleteRow(row);
+			localStorage.removeItem("product"+id);
+    		localStorage.removeItem("qty"+id);
+    		alert(row);
+
 		}
 
 
 		function Truncate() {
 			localStorage.clear();
-			alert('cleared');
+			//alert('cleared');
 		}
 
 		function FetchData() {
-			alert("Total number of records in localStorage: " + localStorage.length);
+			//alert("Total number of products including null: " + (localStorage.length-1)/2);
 			if (localStorage.CurrentID){
         		var i = parseInt(localStorage.CurrentID);
     		}
@@ -84,17 +128,19 @@
     		var table = document.getElementById("cart-table");
     		var i = (localStorage.length); //number or records
     		var conta = (i-1)/2; //number of rows that should be generated
-    		var id = (i-1)/2; //initialized fetching id system
+    		var id = 0; //initialized fetching id system
+    		var totalqty = 0;
     		while(conta > 0){ //this will loop x i
-
-				var product = localStorage.getItem('product' + id);
-
-				if(product==""){
-    				alert("skipped");
-        			conta--;
+				//alert(id);
+				if (localStorage.getItem("product"+id) === null) {
+    				//alert("skipped");
+        			id++;
         		}
+
         		else{
-        			conta--;
+        			//alert("print");
+        			//alert(id);
+
         			var table = document.getElementById("cart-table");
 					var row = table.insertRow(2);
 					var cell0 = row.insertCell(0);
@@ -103,15 +149,27 @@
 					//alert(localStorage.getItem('CurrentID'));
 					cell0.innerHTML = localStorage.getItem('product' + id);
 					cell1.innerHTML = localStorage.getItem('qty' + id);
-					cell2.innerHTML = "<button onclick='EditRow(this,"+id+")' type='button'>Edit</button><button onclick='DeleteRecord("+id+")' type='button'>Delete</button>";
+					cell2.innerHTML = "<button onclick='EditRecord(this,"+id+")' type='button'>Edit</button><button onclick='DeleteRow(this,"+id+")' type='button'>Delete</button>";
+					
+					var qtyofcurrentproduct = parseInt(localStorage.getItem('qty' + id));
+					var totalqty = qtyofcurrentproduct + totalqty;
+					
+
+					//alert(qtyofproduct);
+					//var total == qtyofproduct;
+        			conta--;
+        			id++;
+        			//alert("conta: "localStorage.getItem('qty' + id)+conta);
         		}
-        		id--;
     		}
+    		document.getElementById('total').innerHTML = totalqty;
 		}
 
 		function checkStorage() {
     		if(typeof(Storage) !== "undefined") {
+    			if(localStorage.CurrentID) {
         			FetchData();
+        		}
     		}
      		else {
         	alert('Sorry! No Web Storage support...')
@@ -126,7 +184,6 @@
 </head>
 <body>
 	<button onclick="AddRow()" type="button">Add</button>
-
 	<table border="1" width="550" id="cart-table">
 		<thead align="Center">
 			<tr>
@@ -143,7 +200,7 @@
 		<tfoot>
 			<tr>
 				<td colspan="2" align="right">Total Qty:</td>
-				<td align="Center">0</td>
+				<td align="Center" id="total">0</td>
 			</tr>
 		</tfoot>
 	</table>
