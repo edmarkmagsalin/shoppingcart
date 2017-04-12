@@ -6,6 +6,9 @@
 		body{
 			font-family: sans-serif;
 		}
+		#container{
+			text-align: center;
+		}
 		#converted{
 			font-weight: bold;
 			font-size: 20px;
@@ -55,6 +58,7 @@
 	</script>
 </head>
 <body>
+	<div id="container">
 	Paste regular notation here (double layer and whole cube turns not yet supported)
 	<br>
 	<input type="text" name="alg" id="algs" onkeyup="converter()">
@@ -62,5 +66,6 @@
 	<br>
 	<br>
 	<div id="converted" width="500px;">Converted algorithm will appear here..</div>
+	<div>
 </body>
 </html>
