@@ -1,2 +1,2 @@
-# shoppingcart
-basic operations for shopping cart
+# forfun
+cubing
