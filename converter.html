@@ -7,52 +7,104 @@
 			font-family: sans-serif;
 		}
 		input{
-			padding: 5px 2px 5px 2px;
-			margin: 20px auto 20px auto;
+			padding: 8px 4px 8px 4px;
+			border-width: 1px;
+			border-radius: 5px;
 		}
 		#container{
 			text-align: center;
+			margin: 100px auto auto auto;
+		}
+		#alg, input{
+			margin: 20px auto 20px auto;
+			width: 80%;
 		}
 		#converted{
 			font-weight: bold;
 			font-size: 20px;
 		}
 
+
+		#create{
+			margin: 50px auto 50px auto;
+		}
+		#create input{
+			height: 40px;
+			margin: 8px 4px 8px 4px;
+			font-size: 14px;
+			font-weight: bold;
+		}
+		#created{
+			background-color: white;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		#created, input{
+			margin: 20px auto 20px auto;
+			width: 80%;
+		}
+
 	</style>
 	<script type="text/javascript">
+		function clearCreated(){
+			var request = confirm("Are you sure to clear created algorithm?");
+			if (request == true){
+				document.getElementById('created').value = "";
+			}
+
+		}
+		function create(e){
+			document.getElementById('created').value += e+" ";
+		}
 		function converter(){
-			var alg = document.getElementById("algs").value.toUpperCase();
-			/////////////omit toUpperCase function if you will add support to small letters
+			var alg = document.getElementById("alg").value;
 			if(alg === ""){
 				document.getElementById('converted').innerHTML = "Converted algorithm will appear here..";
 			}
 
 			else{
 				var mapObj = {
-					"U\'":"U&rarr;",
-					U:"U&larr;",
-					"E\'":"E&larr;",
-					E:"E&rarr;",
-					"D\'":"D&larr;",
-					D:"D&rarr;",
+					"U\'":"U&rarr;", U:"U&larr;",
+					"u\'":"(UE)&rarr;", u:"(UE)&larr;",
+
+					"E\'":"E&larr;", E:"E&rarr;",
+					"e\'":"E&larr;", e:"E&rarr;",
+
+					"D\'":"D&larr;", D:"D&rarr;",
+					"d\'":"(ED)&larr;", d:"(ED)&rarr;",
 
 
-					"L\'":"L&uarr;",
-					L:"L&darr;",
-					"M\'":"M&darr;",
-					M:"M&uarr;",
-					"R\'":"R&darr;",
-					R:"R&uarr;",
+					"L\'":"L&uarr;", L:"L&darr;",
+					"l\'":"(LM)&uarr;", l:"(LM)&darr;",
+
+					"M\'":"M&uarr;", M:"M&darr;",
+					"m\'":"M&uarr;", m:"M&darr;",
+
+					"R\'":"R&darr;", R:"R&uarr;",
+					"r\'":"(MR)&darr;", r:"(MR)&uarr;",
 
 
-					"F\'":"F&#8634;",
-					F:"F&#8635;",
-					"S\'":"S&#8634;",
-					S:"S&#8635;", 
-					"B\'":"B&#8635;",
-					B:"B&#8634;"
+					"F\'":"F&#8634;", F:"F&#8635;",
+					"f\'":"(FS)&#8634;", f:"(FS)&#8635;",
+
+					"S\'":"S&#8634;", S:"S&#8635;",
+					"s\'":"S&#8634;", s:"S&#8635;",
+
+					"B\'":"B&#8635;", B:"B&#8634;",
+					"b\'":"(SB)&#8635;", b:"(SB)&#8634;",
+
+					//whole cube turns ↓↓↓↓
+
+					"X\'":"(LMR)&darr;", X:"(LMR)&uarr;",
+					"x\'":"(LMR)&darr;", x:"(LMR)&uarr;",
+
+					"Y\'":"(UED)&rarr;", Y:"(UED)&larr;",
+					"y\'":"(UED)&rarr;", y:"(UED)&larr;",
+
+					"Z\'":"(FSB)&#8634;", Z:"(FSB)&#8635;",
+					"z\'":"(FSB)&#8634;", z:"(FSB)&#8635;"
 				};
-				alg = alg.replace(/U\'|U|E\'|E|D\'|D|L\'|L|M\'|M|R\'|R|F\'|F|S\'|S|B\'|B/gi, function(matched){
+				alg = alg.replace(/U\'|U|u\'|u|E\'|E|e\'|e|D\'|D|d\'|d|L\'|L|l\'|l|M\'|M|m\'|m|R\'|R|r\'|r|F\'|F|f\'|f|S\'|S|s\'|s|B\'|B|b\'|b|X\'|X|x\'|x|Y\'|Y|y\'|y|Z\'|Z|z\'|z/gi, function(matched){
 				  return mapObj[matched];
 				});
 
@@ -63,10 +115,79 @@
 </head>
 <body>
 	<div id="container">
-	Paste regular notation here<br> (double layer and whole cube turns not yet supported)
+		<h2>CONVERTER</h2>
+		Paste regular notation here
 		<br>
-	<input type="text" name="alg" id="algs" onkeyup="converter()">
-	<div id="converted" width="500px;">Converted algorithm will appear here..</div>
+		<input type="text" name="" id="alg" onkeyup="converter()">
+		<div id="converted" width="500px;">Converted algorithm will appear here..</div>
+		<div id="create">
+		<h2>CREATOR</h2>
+		<input type="text" name="" id="created">
+			<table border="0" align="center">
+				<tr>
+					<th colspan="6">Basic turns</th>
+				</tr>
+				<tr>
+					<td><input type="button" name="" value="U&larr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="U&rarr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="E&larr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="E&rarr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="D&larr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="D&rarr;" onclick="create(this.value)"></td>
+				</tr>
+				<tr>
+					<td><input type="button" name="" value="R&uarr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="R&darr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="M&uarr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="M&darr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="L&uarr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="L&darr;" onclick="create(this.value)"></td>
+				</tr>
+				<tr>
+					<td><input type="button" name="" value="F&#8635;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="F&#8634;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="S&#8635;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="S&#8634;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="B&#8635;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="B&#8634;" onclick="create(this.value)"></td>
+				</tr>
+				<tr>
+					<th colspan="6">Double layer turns</th>
+				</tr>
+				<tr>
+					<td><input type="button" name="" value="(UE)&larr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="(UE)&rarr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="(ED)&larr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="(ED)&rarr;" onclick="create(this.value)"></td>
+				</tr>
+				<tr>
+					<td><input type="button" name="" value="MR&uarr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="MR&darr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="LM&uarr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="LM&darr;" onclick="create(this.value)"></td>
+				</tr>
+				<tr>
+					<td><input type="button" name="" value="FS&#8635;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="FS&#8634;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="SB&#8635;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="SB&#8634;" onclick="create(this.value)"></td>
+				</tr>
+				<tr>
+					<th colspan="6">Whole cube turns</th>
+				</tr>
+				<tr>
+					<td><input type="button" name="" value="(LMR)&uarr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="(LMR)&darr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="(UED)&rarr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="(UED)&larr;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="(FSB)&#8635;" onclick="create(this.value)"></td>
+					<td><input type="button" name="" value="(FSB)&#8634;" onclick="create(this.value)"></td>
+				</tr>
+				<tr>
+					<td><input type="button" name="" value="clear" onclick="clearCreated()"></td>
+				</tr>
+			</table>
+		</div>
 	</div>
 </body>
 </html>
