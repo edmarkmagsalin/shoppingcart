@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Converter</title>
+	<style type="text/css">
+		body{
+			font-family: sans-serif;
+		}
+		#converted{
+			font-weight: bold;
+			font-size: 20px;
+		}
+
+	</style>
+	<script type="text/javascript">
+		function converter(){
+			var alg = document.getElementById("algs").value.toUpperCase();
+			/////////////omit toUpperCase function if you will add support to small letters
+			if(alg === ""){
+				document.getElementById('converted').innerHTML = "Converted algorithm will appear here..";
+			}
+
+			else{
+				var mapObj = {
+					"U\'":"U&rarr;",
+					U:"U&larr;",
+					"E\'":"E&larr;",
+					E:"E&rarr;",
+					"D\'":"D&larr;",
+					D:"D&rarr;",
+
+
+					"L\'":"L&uarr;",
+					L:"L&darr;",
+					"M\'":"M&darr;",
+					M:"M&uarr;",
+					"R\'":"R&darr;",
+					R:"R&uarr;",
+
+
+					"F\'":"F&#8634;",
+					F:"F&#8635;",
+					"S\'":"S&#8634;",
+					S:"S&#8635;", 
+					"B\'":"B&#8635;",
+					B:"B&#8634;"
+				};
+				alg = alg.replace(/U\'|U|E\'|E|D\'|D|L\'|L|M\'|M|R\'|R|F\'|F|S\'|S|B\'|B/gi, function(matched){
+				  return mapObj[matched];
+				});
+
+				document.getElementById('converted').innerHTML = alg;
+			}
+		}
+	</script>
+</head>
+<body>
+	Paste regular notation here (double layer and whole cube turns not yet supported)
+	<br>
+	<input type="text" name="alg" id="algs" onkeyup="converter()">
+	<br>
+	<br>
+	<br>
+	<div id="converted" width="500px;">Converted algorithm will appear here..</div>
+</body>
+</html>
